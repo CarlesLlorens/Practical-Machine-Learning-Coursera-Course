@@ -108,8 +108,8 @@ training data causes Out of Memory in my computer. We also control the processin
     time.taken <- time.end-time.start
     time.taken
 
-Accuracy In Test Dataset
-========================
+Accuracy and error metrics in datasets
+======================================
 
 We calculate the accuracy on the training set. 
 
