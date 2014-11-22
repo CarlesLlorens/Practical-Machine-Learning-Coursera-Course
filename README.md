@@ -89,7 +89,7 @@ For this algorithm, we decided partitioning the training dataset into two parts:
 
 Next, we build the model using 4-fold cross validation. 
 Take a subset of 6000 observations in trainigdata because the entire 
-training data causes Out of Memory in my computer.
+training data causes Out of Memory in my computer. We also control the processing time for do the train.
 
     # Method
     # I use the Random Forests method 
@@ -183,7 +183,7 @@ The results are:
     Detection Prevalence   0.2859   0.1942   0.1749   0.1628   0.1823
     Balanced Accuracy      0.9987   0.9942   0.9917   0.9919   0.9958
 
-The random forest model missclassifies 63 of 7846 observations and give and accuracy rate of 99.2%..
+The random forest model missclassifies 63 of 7846 observations and give and accuracy rate of 99.2%. We think that will be a good predictor for the test dataset. The Accuracy, sensitibity and specificity are near 1 in most cases.
 
 Prediction Assignment
 =====================
