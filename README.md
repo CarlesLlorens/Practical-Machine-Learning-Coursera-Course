@@ -76,7 +76,7 @@ Machine Learning Model
 
 We use the Random Forest machine learning algorithm for this project.
 Random Forest is one of the most accurate machine learning algorithms available. For a data set large enough produce a very accurate classifier.
-For this algorithm, we decided partitioning the training dataset into two parts: the training part and de cros-validation part. The training part consists of 60% of the original training data and will be used to train the model. The cros-validation part consists of 40% of the original training part and will provide an out of sample estimate of how well the model will perform on the test set.
+For this algorithm, we decided partitioning the training dataset into two parts: the training part and de cros-validation part. The training part consists of 60% of the original training data and will be used to train the model. The cros-validation part consists of 40% of the original training part and will provide an estimate of how well the model is when applied on the test set.
 
     # Partitioning the training dataset into two parts. 
     # First part will be used to train the model (60% of the data).
@@ -111,7 +111,7 @@ training data causes Out of Memory in my computer. We also control the processin
 Accuracy and error metrics in datasets
 ======================================
 
-We calculate the accuracy on the training set. 
+We calculate the accuracy and other metrics on the training set. 
 
     # Calculate the prediction accuracy of our model on the training data set.
     train_pred <- predict(model, traindata)
@@ -148,13 +148,13 @@ The results are:
     Balanced Accuracy      1.0000   1.0000   1.0000   1.0000   1.0000
 
 The random forest model classifies all data correctly and give and accuracy rate of 100%.
-We want to see how good the model is. It is necessary to predict our model with the cross-validation  set obtained from the original dataset. 
+We want to see how good the model is. It is necessary to predict our model with the cross-validation set obtained from the original dataset. 
 
     # Calculate the prediction accuracy of our model on the cross-validation data set.
     crossvalidation_pred <- predict(model, crossvalidationdata)
     confusionMatrix(crossvalidation_pred, crossvalidationdata$classe)
 
-The results are:
+The results of accuracy and other metrics are:
 
     Confusion Matrix and Statistics
     Reference
@@ -183,11 +183,11 @@ The results are:
     Detection Prevalence   0.2859   0.1942   0.1749   0.1628   0.1823
     Balanced Accuracy      0.9987   0.9942   0.9917   0.9919   0.9958
 
-The random forest model missclassifies 63 of 7846 observations and give and accuracy rate of 99.2%. We think that will be a good predictor for the test dataset. The Accuracy, sensitibity and specificity are near 1 in most cases.
+The random forest model missclassifies 63 of 7846 observations and give and accuracy rate of 99.2%. Also, the sensitibity and specificity are near 1 in most cases. We think that will be a good predictor for the test dataset. 
 
 Prediction Assignment
 =====================
-We apply the machine learning algorithm over 20 test cases in the testing data set provided.
+Finally, we apply the machine learning algorithm over 20 test cases in the testing dataset provided for create the files needed in the assignment.
 
     answers <- predict(model, test)
     answers <- as.character(answers)
