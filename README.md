@@ -18,32 +18,116 @@ Getting and Processing Data
 ===========================
 
 Data was extracted from two csv files. The first was the training dataset, consisting of 19622 observations with classification labels. The second was the test dataset, consisting of 20 observations without classification labels.
+The code use for download data and create datasets was:
+
+    # Create a function for download data from Internet and save in working directory
+    downloadDataset <- function(URL="", destFile="datapml.csv"){
+      if(!file.exists(destFile)){
+        download.file(URL, destFile, method="curl")
+      }else{
+        message("File already downloaded.")
+      }
+    }
+
+    trainURL<-"https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+    testURL <-"https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+    downloadDataset(trainURL, "pml-training.csv")
+    downloadDataset(testURL , "pml-testing.csv")
+
+    train.original <- read.csv("pml-training.csv",na.strings=c("NA",""))
+    test.original  <- read.csv("pml-testing.csv", na.strings=c("NA",""))
+
+
 Exploratory Data Analysis
+=========================
+
 Examining the summary of the train dataset, we observe that there are some columns that do not contain relevant information (columns 1 to 6). So it is best to remove to simplify dataset. 
+
+    train <- train.original[,-c(1:6)]
+    test  <- test.original[,-c(1:6)]
+
 On the other hand, there are columns that contain Nan, for example column 'kurtosis_yaw_belt'. We decided delete it to simplify the data set.
+
+    # Create a function to remove entire NA columns, 
+    # and apply this to train and test datasets.
+    # Next create a function that removes any variables 
+    # with missing NAs and apply this to train and test datasets.
+
+    rm.na.cols  <- function(x) { x[ , colSums( is.na(x) ) < nrow(x) ] }
+    train <- rm.na.cols(train)
+    test  <- rm.na.cols(test)
+
+    complete    <- function(x) {x[,sapply(x, function(y) !any(is.na(y)))] }
+    incompl     <- function(x) {names( x[,sapply(x, function(y) any(is.na(y)))] ) }
+    train.na.var <- incompl(train)
+    test.na.var  <- incompl(test)
+    train <- complete(train)
+    test  <- complete(test)
+
+    # Now, train contains 19622 observations and 54 variables
+    # and  test  contains    20 observations and 54 variables
+    dim(train)
+    dim(test)
+
+
 
 Machine Learning Model
 ======================
+
 We use the Random Forest machine learning algorithm for this project.
 Random Forest is one of the most accurate machine learning algorithms available. For a data set large enough produce a very accurate classifier.
-For this algorithm, we decided partitioning the training dataset into two parts: the training part and de test part. The training part consists of 60% of the original training data and will be used to train the model. The test part consists of 40% of the original training part and will provide an out of sample estimate of how well the model will perform on the test set.
+For this algorithm, we decided partitioning the training dataset into two parts: the training part and de cros-validation part. The training part consists of 60% of the original training data and will be used to train the model. The cros-validation part consists of 40% of the original training part and will provide an out of sample estimate of how well the model will perform on the test set.
+
+    # Partitioning the training dataset into two parts. 
+    # First part will be used to train the model (60% of the data).
+    # Second part will be used as a validation set (40% of the data).
+
+    set.seed(123)
+    partition <- createDataPartition(y = train$classe, p = 0.6, list = FALSE)
+    traindata <- train[partition, ]
+    crossvalidationdata  <- train[-partition, ]
+
 Next, we build the model using 4-fold cross validation. 
 Take a subset of 6000 observations in trainigdata because the entire 
 training data causes Out of Memory in my computer.
 
+    # Method
+    # I use the Random Forests method 
+    # which applies bagging to tree learners. 
+    # I build the model using 4-fold cross validation. 
+    # Take a subset of 6000 observations in trainigdata because the entire 
+    # training data causes Out of Memory in my computer.
+    time.start <-Sys.time()
+    trainIdx  <- sample(nrow(train), 6000)
+    traindata <-train[trainIdx,]
+    model <- train(classe ~ ., data = traindata, method = "rf", prox = TRUE, 
+               tuneGrid=data.frame(mtry=3),
+               trControl = trainControl(method = "cv", number = 4, allowParallel = TRUE))
+    model
+    time.end <-Sys.time()
+    time.taken <- time.end-time.start
+    time.taken
+
 Accuracy In Test Dataset
 ========================
-We calculate the accuracy on the training set. The results are:
+
+We calculate the accuracy on the training set. 
+
+    # Calculate the prediction accuracy of our model on the training data set.
+    train_pred <- predict(model, traindata)
+    confusionMatrix(train_pred, traindata$classe)
+
+The results are:
 
     Confusion Matrix and Statistics
-          Reference
-          Prediction    A    B    C    D    E
-              A 1703    0    0    0    0
-              B    0 1196    0    0    0
-              C    0    0 1007    0    0
-              D    0    0    0 1016    0
-              E    0    0    0    0 1078
-          Overall Statistics
+    Reference
+    Prediction    A    B    C    D    E
+             A 1703    0    0    0    0
+             B    0 1196    0    0    0
+             C    0    0 1007    0    0
+             D    0    0    0 1016    0
+             E    0    0    0    0 1078
+    Overall Statistics
                                      
                Accuracy : 1          
                  95% CI : (0.9994, 1)
@@ -64,7 +148,13 @@ We calculate the accuracy on the training set. The results are:
     Balanced Accuracy      1.0000   1.0000   1.0000   1.0000   1.0000
 
 The random forest model classifies all data correctly and give and accuracy rate of 100%.
-We want to see how good the model is. It is necessary to predict our model with the cross-validation  set obtained from the original dataset. The results are:
+We want to see how good the model is. It is necessary to predict our model with the cross-validation  set obtained from the original dataset. 
+
+    # Calculate the prediction accuracy of our model on the cross-validation data set.
+    crossvalidation_pred <- predict(model, crossvalidationdata)
+    confusionMatrix(crossvalidation_pred, crossvalidationdata$classe)
+
+The results are:
 
     Confusion Matrix and Statistics
     Reference
