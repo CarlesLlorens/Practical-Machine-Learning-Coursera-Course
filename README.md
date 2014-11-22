@@ -91,7 +91,6 @@ Next, we build the model using 4-fold cross validation.
 Take a subset of 6000 observations in trainigdata because the entire 
 training data causes Out of Memory in my computer. We also control the processing time for do the train.
 
-    # Method
     # I use the Random Forests method 
     # which applies bagging to tree learners. 
     # I build the model using 4-fold cross validation. 
@@ -104,8 +103,9 @@ training data causes Out of Memory in my computer. We also control the processin
                tuneGrid=data.frame(mtry=3),
                trControl = trainControl(method = "cv", number = 4, allowParallel = TRUE))
     model
-    time.end <-Sys.time()
+    time.end   <-Sys.time()
     time.taken <- time.end-time.start
+    # Time needed for make the train.
     time.taken
 
 Accuracy and error metrics in datasets
@@ -127,15 +127,15 @@ The results are:
              C    0    0 1007    0    0
              D    0    0    0 1016    0
              E    0    0    0    0 1078
+    
     Overall Statistics
-                                     
                Accuracy : 1          
                  95% CI : (0.9994, 1)
     No Information Rate : 0.2838     
     P-Value [Acc > NIR] : < 2.2e-16  
-                                     
-                  Kappa : 1          
+    Kappa : 1          
     Mcnemar's Test P-Value : NA         
+    
     Statistics by Class:
                          Class: A Class: B Class: C Class: D Class: E
     Sensitivity            1.0000   1.0000   1.0000   1.0000   1.0000
@@ -150,7 +150,7 @@ The results are:
 The random forest model classifies all data correctly and give and accuracy rate of 100%.
 We want to see how good the model is. It is necessary to predict our model with the cross-validation set obtained from the original dataset. 
 
-    # Calculate the prediction accuracy of our model on the cross-validation data set.
+    # Calculate the prediction accuracy of our model on the cross-validation dataset.
     crossvalidation_pred <- predict(model, crossvalidationdata)
     confusionMatrix(crossvalidation_pred, crossvalidationdata$classe)
 
@@ -172,6 +172,7 @@ The results of accuracy and other metrics are:
     P-Value [Acc > NIR] : < 2.2e-16       
     Kappa : 0.9898          
     Mcnemar's Test P-Value : NA              
+    
     Statistics by Class:
                          Class: A Class: B Class: C Class: D Class: E
     Sensitivity            0.9996   0.9914   0.9868   0.9852   0.9917
@@ -187,7 +188,7 @@ The random forest model missclassifies 63 of 7846 observations and give and accu
 
 Prediction Assignment
 =====================
-Finally, we apply the machine learning algorithm over 20 test cases in the testing dataset provided for create the files needed in the assignment.
+Finally, we apply the machine learning algorithm over 20 test cases in the test dataset provided for create the files needed in the assignment.
 
     answers <- predict(model, test)
     answers <- as.character(answers)
