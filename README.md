@@ -1,7 +1,7 @@
 
 
-Practical Machine Learning
-==========================
+Practical Machine Learning Coursera Course
+==========================================
 
 Assignment 1
 ============
