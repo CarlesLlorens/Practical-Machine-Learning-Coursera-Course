@@ -187,7 +187,7 @@ The random forest model missclassifies 63 of 7846 observations and give and accu
 
 Prediction Assignment
 =====================
-Finally, we apply the machine learning algorithm over 20 test cases in the test dataset provided for create the files needed in the assignment.
+Finally, we apply the model over 20 test cases and generate the predicted labels in the test dataset. Later we generate the files needed in the assignment.
 
     answers <- predict(model, test)
     answers <- as.character(answers)
