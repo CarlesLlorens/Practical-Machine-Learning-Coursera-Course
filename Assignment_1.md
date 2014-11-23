@@ -84,13 +84,13 @@ For this algorithm, we decided partitioning the training dataset into two parts:
     traindata <- train[partition, ]
     crossvalidationdata  <- train[-partition, ]
 
-Next, we build the model using 4-fold cross validation. 
-Take a subset of 6000 observations in trainig data because the entire 
+Next, we build the model and evaluate it using 4-fold cross validation. 
+NOTE: We take a subset of 6000 observations in trainig data because the entire 
 training data causes Out of Memory in my computer. We also control the processing time for do the train.
 
     # I use the Random Forests method 
     # which applies bagging to tree learners. 
-    # I build the model using 4-fold cross validation. 
+    # I evaluate the model using 4-fold cross validation. 
     # Take a subset of 6000 observations in trainigdata because the entire 
     # training data causes Out of Memory in my computer.
     time.start <-Sys.time()
