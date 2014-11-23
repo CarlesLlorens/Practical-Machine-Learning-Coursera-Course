@@ -6,15 +6,13 @@ Practical Machine Learning
 Assignment 1
 ============
 
-Comments
-========
-
 First, sorry for my English. I’m Spanish.
 
 This repository contains the files needed by Practical Machine Learning Coursera Course.
 
-There are two files:
+This repository contains my work for the course assignment for the Coursera course "Practical Machine Learning", part of the Data Science specialization. 
+The repository contains two files:
 
-Assignment_1.md : Contains a description of the jobs doing for the assignment
+Assignment_1.md : A description of the jobs doing for the assignment
 
-PML_Ass_1.R     : Contains the script used
+PML_Ass_1.R     : The script used
