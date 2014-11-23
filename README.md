@@ -15,6 +15,6 @@ This repository contains the files needed by Practical Machine Learning Coursera
 
 There are two files:
 
-Assignment_1.htm : Contains a description of the jobs doing by the assignment
+Assignment_1.md : Contains a description of the jobs doing for the assignment
 
-PML_Ass_1.R      : Contains the script used
+PML_Ass_1.R     : Contains the script used
