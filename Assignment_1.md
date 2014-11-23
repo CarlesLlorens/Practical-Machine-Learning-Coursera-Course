@@ -8,8 +8,6 @@ Assignment 1
 Introduction
 ============
 
-First, sorry for my English. I’m Spanish.
-
 We have a dataset for the Human Activity Recognition from Groupware (see http://groupware.les.inf.puc-rio.br/har ) ,  in which exists collected data on 8 hours of activities of some healthy subjects.
 This project uses a subset of this dataset, and attempts to use machine learning techniques to predict the classification of the activities according with the predictors stored in the dataset. Also, we see how good the predictor is and take metrics of errors.
 
@@ -65,8 +63,8 @@ On the other hand, there are columns that contain Nan, for example column 'kurto
 
     # Now, train contains 19622 observations and 54 variables
     # and  test  contains    20 observations and 54 variables
-    dim(train)
-    dim(test)
+    cat(sprintf("train contains %d observations and %d variables", dim(train)[1],dim(train)[2]))
+    cat(sprintf("test  contains %d observations and %d variables", dim(test)[1],dim(test)[2]))
 
 
 
@@ -87,7 +85,7 @@ For this algorithm, we decided partitioning the training dataset into two parts:
     crossvalidationdata  <- train[-partition, ]
 
 Next, we build the model using 4-fold cross validation. 
-Take a subset of 6000 observations in trainigdata because the entire 
+Take a subset of 6000 observations in trainig data because the entire 
 training data causes Out of Memory in my computer. We also control the processing time for do the train.
 
     # I use the Random Forests method 
@@ -105,16 +103,17 @@ training data causes Out of Memory in my computer. We also control the processin
     time.end   <-Sys.time()
     time.taken <- time.end-time.start
     # Time needed for make the train.
-    time.taken
+    cat(sprintf("Time taken for train the model: %05.3f minutes", time.taken))
 
-Accuracy and error metrics in datasets
-======================================
+Prediction Accuracy and error metrics in datasets
+=================================================
 
 We calculate the accuracy and other metrics on the training set. 
 
     # Calculate the prediction accuracy of our model on the training data set.
     train_pred <- predict(model, traindata)
-    confusionMatrix(train_pred, traindata$classe)
+    cmtr <- confusionMatrix(train_pred, traindata$classe); cmtr
+    cat(sprintf("Training Accuracy: %02.3f", cmtr$overall['Accuracy']))
 
 The results are:
 
@@ -151,7 +150,8 @@ We want to see how good the model is. It is necessary to predict our model with 
 
     # Calculate the prediction accuracy of our model on the cross-validation dataset.
     crossvalidation_pred <- predict(model, crossvalidationdata)
-    confusionMatrix(crossvalidation_pred, crossvalidationdata$classe)
+    cmcv <- confusionMatrix(crossvalidation_pred, crossvalidationdata$classe); cmcv
+    cat(sprintf("Cross-Validation Accuracy: %02.3f", cmcv$overall['Accuracy']))
 
 The results of accuracy and other metrics are:
 
